@@ -112,3 +112,77 @@ Mostrar cómo está todo el invernadero en un momento dado
 | Sensor de humedad del suelo | Medir la humedad del suelo                                   | Trabaja en % con sus propios rangos                                      | Debe mostrar su medición en % y decir si la humedad está baja, adecuada o alta. Debe permitir saber si el suelo está seco para el riego.                                            |
 | Sistema de riego            | Regar las plantas cuando haga falta                          | Si está activo o inactivo y el sensor de humedad del suelo que usa       | Debe poder activarse, desactivarse y decir su estado. Debe revisar lo que dice el sensor del suelo y activarse si la humedad está baja, o quedarse apagado si está adecuada o alta. |
 | Invernadero                 | Juntar todos los elementos y revisar el invernadero completo | Los sensores instalados y el sistema de riego                            | Debe permitir agregar sensores, mostrar la medición e interpretación de cada sensor y pedirle al riego que revise si hace falta regar.                                              |
+
+
+
+## 4. Características comunes y especialización
+
+### Qué información tienen en común
+
+Los tres sensores tienen un identificador, una ubicación, un estado y una medición.
+
+### Qué comportamientos tienen en común
+
+Todos pueden dar su medición, activarse, desactivarse, mostrar sus datos e interpretar lo que midieron.
+
+### Qué cambia dependiendo del tipo de sensor
+
+Lo que cambia es qué miden, en qué unidad y cómo interpretan el número:
+
+Por eso el mismo número no significa lo mismo en todos. Un 30° es temperatura alta, humedad ambiental baja y humedad del suelo adecuada. Todos interpretan su medición, pero cada uno a su manera.
+
+### ¿Existe un concepto general que represente a todos los sensores?
+
+El Sensor. Ahí va todo lo que comparten: identificador, ubicación, estado y medición. Así eso se escribe una sola vez.
+
+### ¿Qué elementos podrían ser especializaciones?
+
+El sensor de temperatura, el de humedad ambiental y el de humedad del suelo. Los tres son sensores, pero cada uno tiene su unidad y su forma de interpretar.
+
+Aunque los dos de humedad usan %, no conviene juntarlos en uno solo, porque sus rangos son diferentes y miden cosas distintas.
+
+---
+
+## 5. Relaciones entre objetos
+
+### Relaciones ES UN
+
+Un sensor de temperatura ES UN sensor.
+
+Un sensor de humedad ambiental ES UN sensor.
+
+Un sensor de humedad del suelo ES UN sensor.
+
+Estas sí se podrían representar con herencia, porque los tres tienen todo lo de un sensor y nada más cambian cómo interpretan su medición.
+
+### Relaciones TIENE / UTILIZA UN
+
+El invernadero TIENE sensores.
+
+El invernadero TIENE un sistema de riego.
+
+El sistema de riego UTILIZA el sensor de humedad del suelo.
+
+Estas no deben ser herencia. El invernadero no es un sensor ni un sistema de riego, solo los contiene. 
+
+### Qué objetos colaboran y qué información necesitan
+
+Sistema de riego con sensor de humedad del suelo.
+
+Invernadero con los sensores.
+
+Invernadero con el sistema de riego.
+
+### Qué responsabilidades no deben duplicarse
+
+Interpretar la medición le toca solo al sensor. El riego no debe volver a revisar si 22 % es bajo, se lo pregunta al sensor.
+
+Los datos que comparten los sensores se guardan en el sensor general, no se repiten en cada tipo.
+
+Activar o apagar el riego le toca solo al sistema de riego. El sensor mide, pero no prende el riego.
+
+### ¿Por qué SistemaRiego no debería ser una subclase de Sensor?
+
+Porque el sistema de riego no es un sensor, el sensor observa, el sistema de riego actúa.
+
+El riego no tiene medición, ni unidad, ni rangos que interpretar. Si heredara de Sensor, se quedaría con cosas que no usa y se mezclarían dos trabajos diferentes.
