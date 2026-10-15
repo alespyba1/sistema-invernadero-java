@@ -319,7 +319,7 @@ Salen de los objetos que identifiqué en la sección 2. Hay un sensor general, t
 
 **3. ¿Por qué determinados atributos serán `private`?**
 
-Para que nadie los cambie sin control. Por ejemplo, desde `Main` no se va a poder hacer `sensor.ultimaMedicion = 25`; hay que usar `registrarMedicion(25)`, que primero revisa si el sensor está activo. El `id` y la `ubicacion` no tienen *setter* porque un sensor no debería cambiar de identificador ni de lugar después de crearlo.
+Para que nadie los cambie sin control. 
 
 **4. ¿Qué información proporcionarás mediante los constructores?**
 
@@ -335,28 +335,23 @@ Lo que necesita un objeto para existir. A los sensores se les da su `id` y su `u
 
 **7. ¿Por qué existe una relación "es un" entre ellas?**
 
-Porque un sensor de temperatura **es un** sensor, igual que los de humedad. Los tres tienen identificador, ubicación, estado y medición, y los tres interpretan lo que miden. Lo único que cambia es la unidad y los rangos.
+Los tres tienen identificador, ubicación, estado y medición, y los tres interpretan lo que miden. Lo único que cambia es la unidad y los rangos.
 
 **8. ¿Qué información o comportamiento decidiste colocar en la superclase?**
 
-Los datos que tienen todos (`id`, `ubicacion`, `unidad`, `activo`, `ultimaMedicion`), sus *getters*, `activar()`, `desactivar()`, `registrarMedicion()` y `mostrarInformacion()`, porque funcionan igual para cualquier sensor.
-
-También puse `evaluarMedicion()` en `Sensor`, aunque ahí solo regresa un texto general. Así cualquier sensor se puede interpretar sin saber de qué tipo es, y cada subclase lo sobrescribe con sus rangos. Como en esta práctica no se usan clases abstractas, `Sensor` es una clase normal con una versión general del método.
-
-La `unidad` la dejé como atributo en `Sensor` porque todos los sensores tienen una; lo que cambia es el valor, y cada subclase lo manda con `super(...)`.
+(`id`, `ubicacion`, `unidad`, `activo`, `ultimaMedicion`), sus *getters*, `activar()`, `desactivar()`, `registrarMedicion()` y `mostrarInformacion()`, porque funcionan igual para cualquier sensor.
 
 **9. ¿Qué elementos permanecerán en las subclases?**
 
 - Sus rangos, porque son el criterio propio de cada tipo de sensor.
-- Su versión de `evaluarMedicion()`.
-- `convertirAFahrenheit()` solo en `SensorTemperatura`, porque convertir humedad a °F no tiene sentido.
+- `evaluarMedicion()`.
+- `convertirAFahrenheit()` solo en `SensorTemperatura`
 - `necesitaRiego()` solo en `SensorHumedadSuelo`, porque es el único sensor que decide el riego.
 
-No los subí a `Sensor` porque los otros sensores no los usarían.
 
 **10. ¿Por qué `SistemaRiego` no pertenece a la jerarquía de sensores?**
 
-Porque no es un sensor. El sensor observa y el sistema de riego actúa. El riego no tiene medición, ni unidad, ni rangos, así que si heredara de `Sensor` tendría atributos y métodos que no usa. La relación correcta es que el riego **utiliza** un sensor de humedad del suelo; por eso en el UML es una flecha de asociación y no un triángulo de herencia.
+Porque no es un sensor. El sensor observa y el sistema de riego actúa. El riego no tiene medición, ni unidad, ni rangos, así que si heredara de `Sensor` tendría atributos y métodos que no usa. 
 
 **11. ¿Qué decisiones tomaste para evitar duplicar responsabilidades?**
 
@@ -364,4 +359,3 @@ Porque no es un sensor. El sensor observa y el sistema de riego actúa. El riego
 - `mostrarInformacion()` está una sola vez, en `Sensor`, y lo heredan todos.
 - Cada sensor es el único que sabe interpretar su medición. El riego no revisa si 22 % es bajo; le pregunta al sensor con `necesitaRiego()`.
 - Solo `SistemaRiego` prende o apaga el riego. El sensor y el invernadero no cambian su estado directamente.
-- El invernadero no interpreta mediciones, solo les pide a los sensores que se muestren y al riego que revise.
