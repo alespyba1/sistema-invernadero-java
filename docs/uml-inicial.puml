@@ -1,0 +1,84 @@
+@startuml uml-inicial
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+skinparam classBorderColor #2E7D32
+skinparam classHeaderBackgroundColor #E8F5E9
+hide circle
+hide empty members
+
+title Sistema de invernadero inteligente — UML inicial
+
+class Invernadero {
+  - nombre : String
+  - sensores : ArrayList<Sensor>
+  - riego : SistemaRiego
+  --
+  + Invernadero(nombre : String, riego : SistemaRiego)
+  + getNombre() : String
+  + agregarSensor(sensor : Sensor) : void
+  + mostrarEstado() : void
+  + revisarRiego() : void
+}
+
+class Sensor {
+  - id : double
+  - ubicacion : String
+  - unidad : String
+  - activo : boolean
+  - ultimaMedicion : double
+  --
+  + Sensor(id : String, ubicacion : String, unidad : String)
+  + getId() : String
+  + getUbicacion() : String
+  + getUnidad() : String
+  + isActivo() : boolean
+  + getUltimaMedicion() : double
+  + activar() : void
+  + desactivar() : void
+  + registrarMedicion(valor : double) : void
+  + evaluarMedicion() : String
+  + mostrarInformacion() : String
+}
+
+class SensorTemperatura {
+  - {static} TEMPERATURA_MINIMA
+  - {static} TEMPERATURA_MAXIMA
+  --
+  + SensorTemperatura(id : String, ubicacion : String)
+  + evaluarMedicion() : String
+  + convertirAFahrenheit() : double
+}
+
+class SensorHumedad {
+  - {static} HUMEDAD_MINIMA
+  - {static} HUMEDAD_MAXIMA
+  --
+  + SensorHumedad(id : String, ubicacion : String)
+  + evaluarMedicion() : String
+}
+
+class SensorHumedadSuelo {
+  - {static} HUMEDAD_MINIMA
+  - {static} HUMEDAD_MAXIMA
+  --
+  + SensorHumedadSuelo(id : String, ubicacion : String)
+  + evaluarMedicion() : String
+  + necesitaRiego() : boolean
+}
+
+class SistemaRiego {
+  - activo : boolean
+  - sensorSuelo : SensorHumedadSuelo
+  --
+  + SistemaRiego(sensorSuelo : SensorHumedadSuelo)
+  + activar() : void
+  + desactivar() : void
+  + isActivo() : boolean
+  + getEstado() : boolean
+  + revisarHumedadSuelo() : void
+}
+
+
+
+@enduml
