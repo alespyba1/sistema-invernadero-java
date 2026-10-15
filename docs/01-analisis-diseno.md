@@ -186,3 +186,182 @@ Activar o apagar el riego le toca solo al sistema de riego. El sensor mide, pero
 Porque el sistema de riego no es un sensor, el sensor observa, el sistema de riego actúa.
 
 El riego no tiene medición, ni unidad, ni rangos que interpretar. Si heredara de Sensor, se quedaría con cosas que no usa y se mezclarían dos trabajos diferentes.
+
+
+
+---
+
+# Fase 2. Diseño orientado a objetos
+
+---
+
+## 6. Diseño de clases
+
+| Clase | Atributos propuestos | Tipo de dato | Métodos propuestos | Responsabilidad |
+|---|---|---|---|---|
+| `Sensor` | `id`<br>`ubicacion`<br>`unidad`<br>`activo`<br>`ultimaMedicion` | `String`<br>`String`<br>`String`<br>`boolean`<br>`double` | `Sensor(id, ubicacion, unidad)`<br>`getId()`, `getUbicacion()`, `getUnidad()`<br>`isActivo()`, `getUltimaMedicion()`<br>`activar()`, `desactivar()`<br>`registrarMedicion(valor)`<br>`evaluarMedicion()`<br>`mostrarInformacion()` | Guardar lo que tienen en común todos los sensores y dar una forma general de interpretar la medición. |
+| `SensorTemperatura` | `TEMPERATURA_MINIMA`<br>`TEMPERATURA_MAXIMA` | `double` (constante, 18)<br>`double` (constante, 30) | `SensorTemperatura(id, ubicacion)`<br>`evaluarMedicion()`<br>`convertirAFahrenheit()` | Medir la temperatura del aire en °C y decir si está baja, adecuada o alta. |
+| `SensorHumedad` | `HUMEDAD_MINIMA`<br>`HUMEDAD_MAXIMA` | `double` (constante, 40)<br>`double` (constante, 70) | `SensorHumedad(id, ubicacion)`<br>`evaluarMedicion()` | Medir la humedad ambiental en % y decir si está baja, adecuada o alta. |
+| `SensorHumedadSuelo` | `HUMEDAD_MINIMA`<br>`HUMEDAD_MAXIMA` | `double` (constante, 30)<br>`double` (constante, 70) | `SensorHumedadSuelo(id, ubicacion)`<br>`evaluarMedicion()`<br>`necesitaRiego()` | Medir la humedad del suelo en %, decir si está baja, adecuada o alta y avisar si hace falta regar. |
+| `SistemaRiego` | `activo`<br>`sensorSuelo` | `boolean`<br>`SensorHumedadSuelo` | `SistemaRiego(sensorSuelo)`<br>`activar()`, `desactivar()`<br>`isActivo()`, `getEstado()`<br>`revisarHumedadSuelo()` | Prender y apagar el riego y decidir si riega usando lo que dice el sensor de humedad del suelo. |
+| `Invernadero` | `nombre`<br>`sensores`<br>`riego` | `String`<br>`ArrayList<Sensor>`<br>`SistemaRiego` | `Invernadero(nombre, riego)`<br>`getNombre()`<br>`agregarSensor(sensor)`<br>`mostrarEstado()`<br>`revisarRiego()` | Juntar los sensores y el riego, mostrar cómo está cada sensor y pedirle al riego que revise si hace falta regar. |
+
+### Qué atributos necesita cada clase
+
+**Sensor.** id, ubicacion, unidad, activo y ultimaMedicion. 
+
+**SensorTemperatura.** Solo sus rangos: TEMPERATURA MINIMA y TEMPERATURA MAXIMA. 
+
+**SensorHumedad.** Solo sus rangos: HUMEDAD MINIMA y HUMEDAD MAXIMA.
+
+**SensorHumedadSuelo.** Solo sus rangos: HUMEDAD MINIMA y HUMEDAD MAXIMA.
+
+**SistemaRiego.** activo, para saber si está regando, y sensorSuelo, que es el sensor de humedad del suelo que revisa.
+
+**Invernadero.** nombre, sensores, que es la lista con todos los sensores, y riego.
+
+### Qué atributos deben ser private
+
+Todos. Así nadie de afuera los cambia directo, solo con los métodos de la clase.
+
+### Qué información se recibe en el constructor
+
+**Sensor.** Recibe id, ubicacion y unidad. activo empieza en true y ultimaMedicion en 0, así que no se piden.
+
+**Las tres subclases.** Solo reciben id y ubicacion. 
+
+**SistemaRiego.** Recibe el sensor de humedad del suelo que va a usar. Empieza apagado.
+
+**Invernadero.** Recibe su nombre y su sistema de riego. La lista de sensores empieza vacía y se va llenando con agregarSensor().
+
+### Qué operaciones se hacen con métodos
+
+**Sensor.** activar() y desactivar() para cambiar su estado. registrarMedicion(valor) para guardar una medición simulada. evaluarMedicion() para interpretar la medición; en Sensor solo regresa un texto general. mostrarInformacion() para regresar todos sus datos juntos con la interpretación.
+
+**Subclases.** Cada una vuelve a escribir evaluarMedicion() con sus propios rangos. SensorTemperatura agrega convertirAFahrenheit() y SensorHumedadSuelo agrega necesitaRiego(), que dice si la humedad está debajo de 30 %.
+
+**SistemaRiego.** activar() y desactivar() para prenderlo y apagarlo. revisarHumedadSuelo() le pregunta al sensor necesitaRiego() y según eso se prende o se apaga.
+
+**Invernadero.** agregarSensor(sensor) para meter sensores a la lista, mostrarEstado() para mostrar todos los sensores y revisarRiego() para pedirle al riego que revise.
+
+### Qué información se puede consultar desde otras clases
+
+**Sensor.** Su id, ubicación, unidad, si está activo y su última medición, con getId(), getUbicacion(), getUnidad(), isActivo() y getUltimaMedicion().
+
+**SistemaRiego.** Su estado, con isActivo() y getEstado(), que regresa "ACTIVO" o "INACTIVO".
+
+**Invernadero.** Su nombre, con getNombre().
+
+### Qué va en la clase general
+
+En Sensor va todo lo que comparten los tres sensores: id, ubicacion, unidad, activo y ultimaMedicion, sus getters, activar(), desactivar(), registrarMedicion() y mostrarInformacion(). 
+
+### Qué va solo en las clases especializadas
+
+Sus rangos, porque cada tipo tiene los suyos.
+
+---
+
+## 7. Jerarquía de clases
+
+### Qué clases forman una misma jerarquía
+
+Sensor, SensorTemperatura, SensorHumedad y SensorHumedadSuelo. Sensor es la superclase y las otras tres son subclases, porque cada una ES UN sensor.
+
+### Qué clases solo colaboran
+
+SistemaRiego no es un sensor, entonces no entra en la jerarquía. El sensor observa y el riego actúa. 
+
+El riego guarda un SensorHumedadSuelo y no un Sensor cualquiera, porque solo la humedad del suelo decide si se riega y solo ese sensor tiene necesitaRiego().
+
+Invernadero tampoco hereda de nada. 
+
+### Cómo evité duplicar información
+
+Los datos comunes (id, ubicación, unidad, estado y medición) solo están en Sensor.
+
+mostrarInformacion() también está una sola vez en Sensor y lo usan los tres tipos.
+
+En las subclases solo quedó lo que es propio de cada una: sus rangos, su evaluarMedicion() y, en dos de ellas, su método extra.
+
+-------
+
+## 8. Diagrama UML inicial
+
+![Diagrama UML inicial](uml-inicial.png)
+
+Cómo leer el diagrama:
+
+- `-` es privado y `+` es público.
+- Los atributos subrayados son `static` (las constantes de los rangos).
+- La flecha con triángulo vacío es herencia (**ES UN**).
+- La línea con rombo vacío es "tiene" (el invernadero tiene sensores y un sistema de riego).
+- La flecha normal de `SistemaRiego` a `SensorHumedadSuelo` es "utiliza".
+
+El código fuente del diagrama está en `uml-inicial.puml` (PlantUML), por si hay que modificarlo después.
+
+---
+
+## 9. Justificación del diseño
+
+**1. ¿Por qué propusiste esas clases?**
+
+Salen de los objetos que identifiqué en la sección 2. Hay un sensor general, tres tipos de sensor porque cada uno interpreta su medición diferente, un sistema de riego porque es el único que actúa, y un invernadero que junta todo para poder revisarlo completo.
+
+**2. ¿Cuál es la responsabilidad principal de cada una?**
+
+- `Sensor`: guardar los datos comunes de cualquier sensor.
+- `SensorTemperatura`: interpretar la temperatura del aire.
+- `SensorHumedad`: interpretar la humedad ambiental.
+- `SensorHumedadSuelo`: interpretar la humedad del suelo y decir si hace falta regar.
+- `SistemaRiego`: prender o apagar el riego.
+- `Invernadero`: tener todos los sensores y el riego y mostrar el estado completo.
+
+**3. ¿Por qué determinados atributos serán `private`?**
+
+Para que nadie los cambie sin control. Por ejemplo, desde `Main` no se va a poder hacer `sensor.ultimaMedicion = 25`; hay que usar `registrarMedicion(25)`, que primero revisa si el sensor está activo. El `id` y la `ubicacion` no tienen *setter* porque un sensor no debería cambiar de identificador ni de lugar después de crearlo.
+
+**4. ¿Qué información proporcionarás mediante los constructores?**
+
+Lo que necesita un objeto para existir. A los sensores se les da su `id` y su `ubicacion`; la unidad la pone cada subclase sola. Al sistema de riego se le da el sensor de suelo que va a usar. Al invernadero se le da su nombre y su sistema de riego. El estado y la medición no se piden: los sensores empiezan activos con medición 0 y el riego empieza apagado.
+
+**5. ¿Cuál será la superclase?**
+
+`Sensor`.
+
+**6. ¿Qué clases serán subclases?**
+
+`SensorTemperatura`, `SensorHumedad` y `SensorHumedadSuelo`.
+
+**7. ¿Por qué existe una relación "es un" entre ellas?**
+
+Porque un sensor de temperatura **es un** sensor, igual que los de humedad. Los tres tienen identificador, ubicación, estado y medición, y los tres interpretan lo que miden. Lo único que cambia es la unidad y los rangos.
+
+**8. ¿Qué información o comportamiento decidiste colocar en la superclase?**
+
+Los datos que tienen todos (`id`, `ubicacion`, `unidad`, `activo`, `ultimaMedicion`), sus *getters*, `activar()`, `desactivar()`, `registrarMedicion()` y `mostrarInformacion()`, porque funcionan igual para cualquier sensor.
+
+También puse `evaluarMedicion()` en `Sensor`, aunque ahí solo regresa un texto general. Así cualquier sensor se puede interpretar sin saber de qué tipo es, y cada subclase lo sobrescribe con sus rangos. Como en esta práctica no se usan clases abstractas, `Sensor` es una clase normal con una versión general del método.
+
+La `unidad` la dejé como atributo en `Sensor` porque todos los sensores tienen una; lo que cambia es el valor, y cada subclase lo manda con `super(...)`.
+
+**9. ¿Qué elementos permanecerán en las subclases?**
+
+- Sus rangos, porque son el criterio propio de cada tipo de sensor.
+- Su versión de `evaluarMedicion()`.
+- `convertirAFahrenheit()` solo en `SensorTemperatura`, porque convertir humedad a °F no tiene sentido.
+- `necesitaRiego()` solo en `SensorHumedadSuelo`, porque es el único sensor que decide el riego.
+
+No los subí a `Sensor` porque los otros sensores no los usarían.
+
+**10. ¿Por qué `SistemaRiego` no pertenece a la jerarquía de sensores?**
+
+Porque no es un sensor. El sensor observa y el sistema de riego actúa. El riego no tiene medición, ni unidad, ni rangos, así que si heredara de `Sensor` tendría atributos y métodos que no usa. La relación correcta es que el riego **utiliza** un sensor de humedad del suelo; por eso en el UML es una flecha de asociación y no un triángulo de herencia.
+
+**11. ¿Qué decisiones tomaste para evitar duplicar responsabilidades?**
+
+- Los datos comunes están una sola vez, en `Sensor`.
+- `mostrarInformacion()` está una sola vez, en `Sensor`, y lo heredan todos.
+- Cada sensor es el único que sabe interpretar su medición. El riego no revisa si 22 % es bajo; le pregunta al sensor con `necesitaRiego()`.
+- Solo `SistemaRiego` prende o apaga el riego. El sensor y el invernadero no cambian su estado directamente.
+- El invernadero no interpreta mediciones, solo les pide a los sensores que se muestren y al riego que revise.
