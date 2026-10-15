@@ -22,7 +22,7 @@ class Invernadero {
 }
 
 class Sensor {
-  - id : double
+  - id : String
   - ubicacion : String
   - unidad : String
   - activo : boolean
@@ -42,8 +42,8 @@ class Sensor {
 }
 
 class SensorTemperatura {
-  - {static} TEMPERATURA_MINIMA
-  - {static} TEMPERATURA_MAXIMA
+  - {static} TEMPERATURA_MINIMA : double = 18
+  - {static} TEMPERATURA_MAXIMA : double = 30
   --
   + SensorTemperatura(id : String, ubicacion : String)
   + evaluarMedicion() : String
@@ -51,16 +51,16 @@ class SensorTemperatura {
 }
 
 class SensorHumedad {
-  - {static} HUMEDAD_MINIMA
-  - {static} HUMEDAD_MAXIMA
+  - {static} HUMEDAD_MINIMA : double = 40
+  - {static} HUMEDAD_MAXIMA : double = 70
   --
   + SensorHumedad(id : String, ubicacion : String)
   + evaluarMedicion() : String
 }
 
 class SensorHumedadSuelo {
-  - {static} HUMEDAD_MINIMA
-  - {static} HUMEDAD_MAXIMA
+  - {static} HUMEDAD_MINIMA : double = 30
+  - {static} HUMEDAD_MAXIMA : double = 70
   --
   + SensorHumedadSuelo(id : String, ubicacion : String)
   + evaluarMedicion() : String
@@ -75,10 +75,15 @@ class SistemaRiego {
   + activar() : void
   + desactivar() : void
   + isActivo() : boolean
-  + getEstado() : boolean
+  + getEstado() : String
   + revisarHumedadSuelo() : void
 }
 
+Sensor <|-- SensorTemperatura
+Sensor <|-- SensorHumedad
+Sensor <|-- SensorHumedadSuelo
 
-
+Invernadero o--  Sensor : tiene >
+Invernadero o--  SistemaRiego : tiene >
+SistemaRiego --> SensorHumedadSuelo : utiliza >
 @enduml
