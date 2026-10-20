@@ -7,4 +7,15 @@ public class SensorHumedad extends Sensor {
         super(id, ubicacion, "%");
     }
 
+    @Override
+    public String evaluarMedicion() {
+        double medicion = getUltimaMedicion();
+        if (medicion < HUMEDAD_MINIMA) {
+            return "Humedad ambiental baja";
+        } else if (medicion > HUMEDAD_MAXIMA) {
+            return "Humedad ambiental alta";
+        } else {
+            return "Humedad ambiental adecuada";
+        }
+    }
 }

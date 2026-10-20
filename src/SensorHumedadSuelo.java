@@ -7,9 +7,20 @@ public class SensorHumedadSuelo extends Sensor {
         super(id, ubicacion, "%");
     }
 
-    // Comportamiento que solo tiene sentido para el suelo: avisar si hace falta regar
+
     public boolean necesitaRiego() {
         return getUltimaMedicion() < HUMEDAD_MINIMA;
     }
 
+    @Override
+    public String evaluarMedicion() {
+        double medicion = getUltimaMedicion();
+        if (medicion < HUMEDAD_MINIMA) {
+            return "Humedad del suelo baja";
+        } else if (medicion > HUMEDAD_MAXIMA) {
+            return "Humedad del suelo alta";
+        } else {
+            return "Humedad del suelo adecuada";
+        }
+    }
 }

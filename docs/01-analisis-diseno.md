@@ -377,3 +377,23 @@ El de la superclase. Cuando hago `new SensorTemperatura("T-01", "zona norte")`, 
 **3. ¿Para qué utilizaste super(...)?**
 
 Para darle a Sensor los datos que necesita. Como los atributos de Sensor son private. La única forma de inicializarlos es mandándolos al constructor de Sensor.
+
+## 11. Sobrescritura
+
+**1. ¿Qué método sobrescribiste?**
+
+`evaluarMedicion()`. En Sensor regresa "Sin criterio de interpretación", y cada subclase lo vuelve a escribir con sus rangos
+
+**2. ¿Qué indica @Override?**
+
+Que el método reemplaza uno que ya existe en la superclase. 
+
+**3. ¿Por qué utilizaste el mismo nombre de método en las diferentes subclases?**
+
+Porque los tres sensores hacen lo mismo, interpretar su medición, solo que cada uno con sus rangos. Con el mismo nombre, a cualquier sensor se le pregunta igual.
+
+**4. ¿Qué ventaja tiene esto frente a crear un método completamente diferente para cada tipo de sensor?**
+
+Si cada uno tuviera su propio método, habría que saber de qué tipo es cada sensor antes de llamarlo, y terminaría llenando el código de if.
+
+Con el mismo nombre, `mostrarInformacion()`, que está en Sensor, llama a `evaluarMedicion()` y funciona para los tres sin cambiarlo.

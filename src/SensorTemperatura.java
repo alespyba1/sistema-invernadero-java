@@ -11,4 +11,15 @@ public class SensorTemperatura extends Sensor {
         return getUltimaMedicion() * 9.0 / 5.0 + 32;
     }
 
+    @Override
+    public String evaluarMedicion() {
+        double medicion = getUltimaMedicion();
+        if (medicion < TEMPERATURA_MINIMA) {
+            return "Temperatura baja";
+        } else if (medicion > TEMPERATURA_MAXIMA) {
+            return "Temperatura alta";
+        } else {
+            return "Temperatura adecuada";
+        }
+    }
 }

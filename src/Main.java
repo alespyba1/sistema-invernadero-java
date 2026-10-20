@@ -4,24 +4,47 @@ public class Main {
         System.out.println("Sistema de invernadero inteligente");
         System.out.println();
 
-        // Creación de objetos con sus constructores (cada uno llama a super)
         SensorTemperatura temperatura = new SensorTemperatura("T-01", "zona norte");
         SensorHumedad humedad = new SensorHumedad("H-01", "zona central");
         SensorHumedadSuelo suelo = new SensorHumedadSuelo("S-01", "zona sur");
 
-        // registrarMedicion y mostrarInformacion se heredan de Sensor
+        System.out.println("--- Mismo valor (32) en los tres sensores ---");
         temperatura.registrarMedicion(32);
-        humedad.registrarMedicion(55);
-        suelo.registrarMedicion(22);
-
+        humedad.registrarMedicion(32);
+        suelo.registrarMedicion(32);
         System.out.println(temperatura.mostrarInformacion());
         System.out.println(humedad.mostrarInformacion());
         System.out.println(suelo.mostrarInformacion());
         System.out.println();
 
-        // Métodos propios de cada subclase
-        System.out.println("Temperatura en °F: " + temperatura.convertirAFahrenheit());
-        System.out.println("¿El suelo necesita riego? " + suelo.necesitaRiego());
+        System.out.println("--- Temperatura: baja, adecuada y alta ---");
+        double[] valoresTemperatura = {15, 25, 34};
+        for (double valor : valoresTemperatura) {
+            temperatura.registrarMedicion(valor);
+            System.out.println(valor + " " + temperatura.getUnidad() + " -> " + temperatura.evaluarMedicion());
+        }
+        System.out.println();
+
+        System.out.println("--- Humedad ambiental: baja, adecuada y alta ---");
+        double[] valoresHumedad = {32, 55, 82};
+        for (double valor : valoresHumedad) {
+            humedad.registrarMedicion(valor);
+            System.out.println(valor + " " + humedad.getUnidad() + " -> " + humedad.evaluarMedicion());
+        }
+        System.out.println();
+
+        System.out.println("--- Humedad del suelo: baja, adecuada y alta ---");
+        double[] valoresSuelo = {18, 48, 83};
+        for (double valor : valoresSuelo) {
+            suelo.registrarMedicion(valor);
+            System.out.println(valor + " " + suelo.getUnidad() + " -> " + suelo.evaluarMedicion()
+                    + " | ¿Necesita riego? " + suelo.necesitaRiego());
+        }
+        System.out.println();
+
+        System.out.println("--- Comportamiento propio del sensor de temperatura ---");
+        temperatura.registrarMedicion(25);
+        System.out.println(temperatura.getUltimaMedicion() + " °C = " + temperatura.convertirAFahrenheit() + " °F");
     }
 
 }
