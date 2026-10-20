@@ -397,3 +397,42 @@ Porque los tres sensores hacen lo mismo, interpretar su medición, solo que cada
 Si cada uno tuviera su propio método, habría que saber de qué tipo es cada sensor antes de llamarlo, y terminaría llenando el código de if.
 
 Con el mismo nombre, `mostrarInformacion()`, que está en Sensor, llama a `evaluarMedicion()` y funciona para los tres sin cambiarlo.
+
+---
+
+# Fase 4. Polimorfismo y enlace dinámico
+
+## 12. Colección de sensores y enlace dinámico
+
+| Tipo de referencia | Tipo real del objeto | Método que se ejecuta |
+|---|---|---|
+| `Sensor` | `SensorTemperatura` | `evaluarMedicion()` de `SensorTemperatura` |
+| `Sensor` | `SensorHumedad` | `evaluarMedicion()` de `SensorHumedad`  |
+| `Sensor` | `SensorHumedadSuelo` | `evaluarMedicion()` de `SensorHumedadSuelo`  |
+
+**1. ¿Por qué una referencia de tipo Sensor puede apuntar a un objeto SensorTemperatura?**
+
+Porque SensorTemperatura hereda de Sensor, un sensor de temperatura ES UN sensor. Entonces cualquier cosa que se le pueda pedir a un Sensor, un SensorTemperatura la puede hacer.
+
+**2. ¿Puede una referencia SensorTemperatura apuntar directamente a cualquier objeto Sensor?**
+
+No, un Sensor cualquiera podría ser de humedad o el sensor general, y esos no tienen `convertirAFahrenheit()` ni los rangos de temperatura. 
+
+**3. Cuando ejecutas sensor.evaluarMedicion(), ¿qué versión del método se ejecuta?**
+
+La de la clase real del objeto, no la de la referencia. En el for, cuando sensor apunta a T-02 se ejecuta la de SensorTemperatura, con H-02 la de SensorHumedad y con S-02 la de SensorHumedadSuelo.
+
+**4. ¿Cómo determina Java cuál implementación utilizar?**
+
+Lo decide mientras el programa corre, no cuando compila. Al compilar solo revisa que la clase Sensor tenga un método `evaluarMedicion()`
+
+**5. ¿Dónde puedes observar el polimorfismo?**
+
+En el arreglo `Sensor[] sensores`
+
+**6. ¿Dónde puedes observar el enlace dinámico?**
+
+La referencia siempre es Sensor, pero el objeto real cambia, y con él cambia el método que se ejecuta.
+
+También se ve en `mostrarInformacion()`. Ese método está escrito en Sensor y llama a `evaluarMedicion()`
+

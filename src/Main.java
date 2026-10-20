@@ -68,6 +68,22 @@ public class Main {
                     + " -> " + sensor.evaluarMedicion());
         }
 
+        System.out.println();
+        System.out.println("--- Enlace dinámico: tipo de referencia vs tipo real ---");
+        for (Sensor sensor : sensores) {
+            System.out.println("Referencia: Sensor | Objeto real: " + sensor.getClass().getSimpleName()
+                    + " | Se ejecuta: " + sensor.evaluarMedicion());
+        }
+
+        System.out.println();
+        System.out.println("--- Segundo escenario con la misma colección ---");
+        double[] escenario2 = {24, 62, 51};
+        for (int i = 0; i < sensores.length; i++) {
+            sensores[i].registrarMedicion(escenario2[i]);
+        }
+        for (Sensor sensor : sensores) {
+            System.out.println(sensor.mostrarInformacion());
+        }
 
     }
 
