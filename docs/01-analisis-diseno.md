@@ -359,3 +359,21 @@ Porque no es un sensor. El sensor observa y el sistema de riego actúa. El riego
 - `mostrarInformacion()` está una sola vez, en `Sensor`, y lo heredan todos.
 - Cada sensor es el único que sabe interpretar su medición. El riego no revisa si 22 % es bajo; le pregunta al sensor con `necesitaRiego()`.
 - Solo `SistemaRiego` prende o apaga el riego. El sensor y el invernadero no cambian su estado directamente.
+
+---
+
+# Fase 3. Implementación de la jerarquía y sobrescritura
+
+## 10. Constructores y super
+
+**1. ¿Los constructores de la superclase se heredan?**
+
+No, las subclases heredan los atributos y métodos de Sensor, pero no su constructor. Por eso cada subclase tiene el suyo, 
+
+**2. Cuando creas un objeto de una subclase, ¿qué constructor se ejecuta primero?**
+
+El de la superclase. Cuando hago `new SensorTemperatura("T-01", "zona norte")`, lo primero que hace su constructor es `super(id, ubicacion, "°C")`. 
+
+**3. ¿Para qué utilizaste super(...)?**
+
+Para darle a Sensor los datos que necesita. Como los atributos de Sensor son private. La única forma de inicializarlos es mandándolos al constructor de Sensor.

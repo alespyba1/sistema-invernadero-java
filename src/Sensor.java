@@ -51,7 +51,6 @@ public class Sensor {
         }
     }
 
-    // Versión general. Cada tipo de sensor la sobrescribe con sus propios rangos
     public String evaluarMedicion() {
         return "Sin criterio de interpretación";
     }
