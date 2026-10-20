@@ -45,6 +45,30 @@ public class Main {
         System.out.println("--- Comportamiento propio del sensor de temperatura ---");
         temperatura.registrarMedicion(25);
         System.out.println(temperatura.getUltimaMedicion() + " °C = " + temperatura.convertirAFahrenheit() + " °F");
+
+
+        System.out.println();
+        System.out.println("--- Colección de sensores con referencias de tipo Sensor ---");
+
+
+        Sensor sensor1 = new SensorTemperatura("T-02", "zona norte");
+        Sensor sensor2 = new SensorHumedad("H-02", "zona central");
+        Sensor sensor3 = new SensorHumedadSuelo("S-02", "zona sur");
+
+        Sensor[] sensores = {sensor1, sensor2, sensor3};
+
+
+        sensor1.registrarMedicion(32);
+        sensor2.registrarMedicion(55);
+        sensor3.registrarMedicion(22);
+
+
+        for (Sensor sensor : sensores) {
+            System.out.println(sensor.getId() + " | " + sensor.getUltimaMedicion() + " " + sensor.getUnidad()
+                    + " -> " + sensor.evaluarMedicion());
+        }
+
+
     }
 
 }
