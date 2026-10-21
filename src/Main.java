@@ -103,6 +103,26 @@ public class Main {
             }
         }
 
+
+        System.out.println();
+        System.out.println("--- Sistema de riego: activar, desactivar y consultar ---");
+        SistemaRiego riego = new SistemaRiego(suelo);
+        System.out.println("Estado inicial: " + riego.getEstado());
+        riego.activar();
+        System.out.println("Después de activar: " + riego.getEstado());
+        riego.desactivar();
+        System.out.println("Después de desactivar: " + riego.getEstado());
+
+        System.out.println();
+        System.out.println("--- El riego decide con la humedad del suelo ---");
+        double[] valoresRiego = {22, 55, 18, 83};
+        for (double valor : valoresRiego) {
+            suelo.registrarMedicion(valor);
+            riego.revisarHumedadSuelo();
+            System.out.println("Suelo: " + valor + " % -> " + suelo.evaluarMedicion()
+                    + " | Riego: " + riego.getEstado());
+        }
+
     }
 
 }

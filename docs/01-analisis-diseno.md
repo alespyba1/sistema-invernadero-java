@@ -459,3 +459,20 @@ Por eso primero reviso con instanceof y solo hago el casting si el tipo es corre
 **4. ¿Por qué no debes utilizar instanceof para sustituir innecesariamente el polimorfismo?**
 
 En mi código, instanceof solo se usa para métodos que existen en una sola subclase. La interpretación de la medición se sigue haciendo con polimorfismo.
+
+
+## 14. Sistema de riego
+
+Para decidir si riega usa `revisarHumedadSuelo()`. Ese método le pregunta al sensor `necesitaRiego()`. Si es true se activa y si no, se desactiva.
+
+Cada objeto hace solo su parte. El sensor guarda la medición y sabe si es baja. El riego no vuelve a revisar si 22 % es bajo, solo le pregunta al sensor y prende o apaga. El sensor tampoco prende el riego.
+
+**¿El sistema de riego "es un" sensor o utiliza información proporcionada por los sensores?**
+
+Utiliza información de un sensor. No es un sensor, porque no mide nada, no tiene unidad ni rangos. El sensor observa y el riego actúa.
+
+En el código, SistemaRiego no tiene `extends Sensor`. En lugar de eso guarda un atributo `private SensorHumedadSuelo sensorSuelo`, que recibe en el constructor y usa dentro de `revisarHumedadSuelo()`.
+
+El atributo es de tipo SensorHumedadSuelo y no Sensor, porque solo ese sensor tiene `necesitaRiego()`. Así no necesito instanceof ni casting dentro del riego.
+
+En el UML esto aparece como una flecha normal de SistemaRiego a SensorHumedadSuelo con la etiqueta "utiliza", y no como el triángulo de herencia que tienen los sensores con Sensor.
