@@ -85,6 +85,24 @@ public class Main {
             System.out.println(sensor.mostrarInformacion());
         }
 
+
+        System.out.println();
+        System.out.println("--- instanceof y casting: comportamientos propios de una subclase ---");
+        for (Sensor sensor : sensores) {
+            System.out.println(sensor.getId() + " -> " + sensor.evaluarMedicion());
+
+            if (sensor instanceof SensorTemperatura) {
+                SensorTemperatura sensorTemp = (SensorTemperatura) sensor;
+                System.out.println("   Es SensorTemperatura: " + sensorTemp.getUltimaMedicion() + " °C = "
+                        + sensorTemp.convertirAFahrenheit() + " °F");
+            }
+
+            if (sensor instanceof SensorHumedadSuelo) {
+                SensorHumedadSuelo sensorSuelo = (SensorHumedadSuelo) sensor;
+                System.out.println("   Es SensorHumedadSuelo: ¿necesita riego? " + sensorSuelo.necesitaRiego());
+            }
+        }
+
     }
 
 }

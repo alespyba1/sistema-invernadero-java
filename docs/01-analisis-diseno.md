@@ -436,3 +436,26 @@ La referencia siempre es Sensor, pero el objeto real cambia, y con él cambia el
 
 También se ve en `mostrarInformacion()`. Ese método está escrito en Sensor y llama a `evaluarMedicion()`
 
+---
+
+# Fase 5. instanceof, casting e integración del sistema
+
+## 13. Comportamiento específico, instanceof y casting
+
+**1. ¿Por qué fue necesario realizar el casting?**
+
+Porque en el arreglo las referencias son de tipo Sensor, y Sensor no tiene `convertirAFahrenheit()` ni `necesitaRiego()`. Aunque el objeto real sí tenga el método.
+
+**2. ¿Qué comprueba instanceof?**
+
+Revisa, mientras el programa corre, si el objeto real es de cierta clase. 
+
+**3. ¿Qué podría ocurrir si intentaras convertir un objeto a una subclase incorrecta?**
+
+El programa compila, pero al correr se detiene con un error `ClassCastException`. Lo probé con `(SensorTemperatura) sensor2`: sensor2 es un SensorHumedad, y Java marcó "SensorHumedad cannot be cast to class SensorTemperatura".
+
+Por eso primero reviso con instanceof y solo hago el casting si el tipo es correcto.
+
+**4. ¿Por qué no debes utilizar instanceof para sustituir innecesariamente el polimorfismo?**
+
+En mi código, instanceof solo se usa para métodos que existen en una sola subclase. La interpretación de la medición se sigue haciendo con polimorfismo.
